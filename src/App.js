@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Header } from './components/Header'
 import { Hand } from './components/Hand'
 import { Scoreboard } from './components/Scoreboard'
+import { Buttons } from './components/Buttons'
 import './App.css'
 const generateDeck = require('./helpers/deck')
 const calculateScore = require('./helpers/scoring')
@@ -16,26 +17,11 @@ class App extends Component {
       <div className="container-fluid text-center">
         <div className="row">
           <Header />
-          <div className="col-sm-12 ButtonContainer">
-            <button
-              className="text-lowercase PrimaryButton"
-              id="DealButton"
-              onClick={this.startGame}
-            >
-              Deal
-            </button>
-            {this.state.hasDealt ? (
-              <button
-                className="text-lowercase PrimaryButton"
-                id="GoButton"
-                onClick={this.endGame}
-              >
-                Go
-              </button>
-            ) : (
-              ''
-            )}
-          </div>
+          <Buttons
+            hasDealt={this.state.hasDealt}
+            startGame={this.startGame}
+            endGame={this.endGame}
+          />
           {this.state.hasDealt ? (
             <React.Fragment>
               <Hand cards={this.state.cards} onDiscard={this.selectCard} />
