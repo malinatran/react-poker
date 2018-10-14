@@ -6,7 +6,7 @@ export class Card extends Component {
     return (
       <div>
         <p>
-          {this.props.card.value} {this.props.card.suit}
+          {this.props.card.rank} {this.props.card.suit}
         </p>
         <button>Keep</button>
         <button onClick={() => this.props.onDiscard(this.props.card)}>

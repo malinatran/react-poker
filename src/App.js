@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Header } from './components/Header'
 import { Hand } from './components/Hand'
+const generateDeck = require('./helpers/deck')
+const calculateScore = require('./helpers/scoring')
 
 class App extends Component {
   state = {
@@ -11,10 +13,11 @@ class App extends Component {
     return (
       <div>
         <Header />
+        <h3>{this.state.score}</h3>
         <button onClick={this.startGame}>Deal</button>
         {this.state.hasDealt ? (
           <React.Fragment>
-            <button>Go</button>
+            <button onClick={this.endGame}>Go</button>
             <Hand cards={this.state.cards} onDiscard={this.selectCard} />
           </React.Fragment>
         ) : (
@@ -25,18 +28,15 @@ class App extends Component {
   }
 
   startGame = () => {
-    const deck = this.generateDeck()
-    const cards = this.selectFiveCards(deck)
+    const deck = generateDeck()
+    const cards = deck.splice(0, 5)
 
     this.setState({
       hasDealt: true,
       deck,
-      cards
+      cards,
+      score: 0
     })
-  }
-
-  selectFiveCards = deck => {
-    return deck.splice(0, 5)
   }
 
   selectCard = card => {
@@ -53,36 +53,18 @@ class App extends Component {
     })
   }
 
-  generateDeck = () => {
-    const suits = ['spades', 'hearts', 'diamonds', 'clubs']
-    const values = [
-      'ace',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      'jack',
-      'queen',
-      'king'
-    ]
-    const deck = []
+  endGame = () => {
+    const cards = this.state.cards
+    const score = calculateScore(cards)
 
-    suits.forEach(suit => {
-      values.forEach(value => {
-        deck.push({
-          id: deck.length,
-          suit,
-          value
-        })
-      })
+    this.setState(state => {
+      return {
+        hasDealt: state.hasDealt,
+        cards: state.cards,
+        deck: state.deck,
+        score
+      }
     })
-
-    return deck
   }
 }
 
