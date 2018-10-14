@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Header } from './components/Header'
 import { Hand } from './components/Hand'
+import { Scoreboard } from './components/Scoreboard'
+import './App.css'
 const generateDeck = require('./helpers/deck')
 const calculateScore = require('./helpers/scoring')
 
@@ -11,18 +13,42 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <Header />
-        <h3>{this.state.score}</h3>
-        <button onClick={this.startGame}>Deal</button>
-        {this.state.hasDealt ? (
-          <React.Fragment>
-            <button onClick={this.endGame}>Go</button>
-            <Hand cards={this.state.cards} onDiscard={this.selectCard} />
-          </React.Fragment>
-        ) : (
-          <p>Click deal to play!</p>
-        )}
+      <div className="container-fluid text-center">
+        <div className="row">
+          <Header />
+          <div className="col-sm-12 ButtonContainer">
+            <button
+              className="text-lowercase PrimaryButton"
+              id="DealButton"
+              onClick={this.startGame}
+            >
+              Deal
+            </button>
+            {this.state.hasDealt ? (
+              <button
+                className="text-lowercase PrimaryButton"
+                id="GoButton"
+                onClick={this.endGame}
+              >
+                Go
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
+          {this.state.hasDealt ? (
+            <React.Fragment>
+              <Hand cards={this.state.cards} onDiscard={this.selectCard} />
+              {this.state.score === -1 ? (
+                ''
+              ) : (
+                <Scoreboard score={this.state.score} />
+              )}
+            </React.Fragment>
+          ) : (
+            <p className="text-uppercase">Click deal to play!</p>
+          )}
+        </div>
       </div>
     )
   }
@@ -35,7 +61,7 @@ class App extends Component {
       hasDealt: true,
       deck,
       cards,
-      score: 0
+      score: -1
     })
   }
 

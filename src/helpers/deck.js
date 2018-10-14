@@ -1,7 +1,7 @@
 const generateDeck = () => {
-  const suits = ['spades', 'hearts', 'diamonds', 'clubs']
+  const suits = ['♠️', '♥️', '♦️', '♣️']
   const ranks = [
-    'ace',
+    'A',
     '2',
     '3',
     '4',
@@ -11,9 +11,9 @@ const generateDeck = () => {
     '8',
     '9',
     '10',
-    'jack',
-    'queen',
-    'king'
+    'J',
+    'Q',
+    'K'
   ]
   const deck = []
 

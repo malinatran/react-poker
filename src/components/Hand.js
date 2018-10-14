@@ -4,10 +4,12 @@ import PropTypes from 'prop-types'
 
 export const Hand = ({ cards, onDiscard }) => {
   return (
-    <div>
-      {cards.map(card => (
-        <Card key={card.id} card={card} onDiscard={onDiscard} />
-      ))}
+    <div className="col-sm-12">
+      <div className="row">
+        {cards.map(card => (
+          <Card key={card.id} card={card} onDiscard={onDiscard} />
+        ))}
+      </div>
     </div>
   )
 }

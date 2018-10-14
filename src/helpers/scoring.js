@@ -25,13 +25,13 @@ const hasStraight = cards => {
 }
 
 const getNumericValue = rank => {
-  if (rank === 'ace') {
+  if (rank === 'A') {
     return 1
-  } else if (rank === 'jack') {
+  } else if (rank === 'J') {
     return 11
-  } else if (rank === 'queen') {
+  } else if (rank === 'Q') {
     return 12
-  } else if (rank === 'king') {
+  } else if (rank === 'K') {
     return 13
   } else {
     return parseInt(rank)
