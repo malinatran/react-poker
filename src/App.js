@@ -4,107 +4,100 @@ import { Hand } from './components/Hand'
 import { Scoreboard } from './components/Scoreboard'
 import { Buttons } from './components/Buttons'
 import './App.css'
-const {
-  generateDeck,
-  addToDeck,
-  countBools,
-  removeCard
-} = require('./helpers/deck')
 const calculateScore = require('./helpers/scoring')
+const generateDeck = require('./helpers/deck')
+
+const NUM_CARDS_IN_HAND = 5
+const UNSCORED = -1
 
 class App extends Component {
   state = {
     hasDealt: false,
-    handValues: [],
-    isDisabled: true
+    isGameOver: false,
+    selectedCards: []
   }
 
   render() {
+    const { cards, hasDealt, isGameOver, selectedCards, score } = this.state
+
     return (
       <div className="container-fluid text-center">
         <div className="row">
           <Header />
           <Buttons
-            hasDealt={this.state.hasDealt}
+            hasDealt={hasDealt}
             startGame={this.startGame}
             endGame={this.endGame}
-            isDisabled={this.state.isDisabled}
+            isGameOver={isGameOver}
+            isReadyToScore={selectedCards.length === NUM_CARDS_IN_HAND}
           />
-          {this.state.hasDealt ? (
-            <React.Fragment>
+          {hasDealt ? (
+            <>
               <p className="text-uppercase">
                 Select 'keep' for each card to click 'go' and score
               </p>
               <Hand
-                cards={this.state.cards}
-                onDiscard={this.selectCard}
-                enableGoButton={this.enableGoButton}
+                cards={cards}
+                onDiscard={this.getNewCard}
+                selectedCards={selectedCards}
+                onCardSelection={this.toggleCardSelection}
               />
-              {this.state.score === -1 ? (
-                ''
-              ) : (
-                <Scoreboard score={this.state.score} />
-              )}
-            </React.Fragment>
+              {score === UNSCORED ? '' : <Scoreboard score={score} />}
+            </>
           ) : (
-            <p className="text-uppercase">Click deal to play!</p>
+            <p className="text-uppercase">Click 'deal' to play!</p>
           )}
         </div>
       </div>
     )
   }
 
-  enableGoButton = (id, isSelected) => {
+  toggleCardSelection = id => {
+    if (this.state.isGameOver) return
+
     this.setState(state => {
       return {
-        handValues: addToDeck(state.handValues, { id, isSelected }),
-        isDisabled: !countBools(state.handValues)
+        selectedCards: !state.selectedCards.includes(id)
+          ? [...state.selectedCards, id]
+          : state.selectedCards.filter(cardId => cardId !== id),
+        score: UNSCORED
       }
     })
   }
 
   startGame = () => {
     const deck = generateDeck()
-    const cards = deck.splice(0, 5)
+    const cards = deck.splice(0, NUM_CARDS_IN_HAND)
 
     this.setState({
-      hasDealt: true,
-      deck,
       cards,
-      score: -1,
-      handValues: [],
-      isDisabled: true
+      deck,
+      isGameOver: false,
+      hasDealt: true,
+      score: UNSCORED,
+      selectedCards: []
     })
   }
 
-  selectCard = card => {
+  getNewCard = card => {
+    if (this.state.isGameOver) return
+    if (this.state.deck.length === 0) return
+
     this.setState(state => {
-      const [newCard, ...deck] =
-        state.deck.length > 1 ? state.deck : [card, state.deck]
+      const [newCard, ...deck] = state.deck
 
       return {
-        hasDealt: state.hasDealt,
         deck,
-        cards: state.cards.map(c => {
-          return c === card ? newCard : c
-        }),
-        handValues: removeCard(state.handValues, card.id),
-        isDisabled: !countBools(state.handValues)
+        cards: state.cards.map(c => (c === card ? newCard : c)),
+        selectedCards: state.selectedCards.filter(cardId => cardId !== card.id)
       }
     })
   }
 
   endGame = () => {
-    const cards = this.state.cards
-    const score = calculateScore(cards)
-
-    this.setState(state => {
-      return {
-        hasDealt: state.hasDealt,
-        cards: state.cards,
-        deck: state.deck,
-        score
-      }
+    this.setState({
+      score: calculateScore(this.state.cards),
+      isGameOver: true
     })
   }
 }

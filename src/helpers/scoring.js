@@ -10,42 +10,21 @@ const calculateScore = cards => {
   return score
 }
 
+const hasStraight = cards => {
+  const actualHand = cards.map(card => card.rank).sort((a, b) => a - b)
+
+  for (let i = 1; i < actualHand.length; i++) {
+    if (actualHand[i] !== actualHand[i - 1] + 1) {
+      return false
+    }
+  }
+
+  return true
+}
+
 const hasPair = cards => {
   const values = cards.map(card => card.rank)
   return values.some((val, i) => values.indexOf(val) !== i)
-}
-
-const hasStraight = cards => {
-  const actualHand = cards
-    .map(card => getNumericValue(card.rank))
-    .sort((a, b) => a - b)
-
-  const expectedHand = getExpectedHand(actualHand[0])
-  return actualHand.toString() === expectedHand.toString()
-}
-
-const getNumericValue = rank => {
-  if (rank === 'A') {
-    return 1
-  } else if (rank === 'J') {
-    return 11
-  } else if (rank === 'Q') {
-    return 12
-  } else if (rank === 'K') {
-    return 13
-  } else {
-    return parseInt(rank)
-  }
-}
-
-const getExpectedHand = lowestElement => {
-  const hand = []
-
-  for (let i = 0; i < 5; i++) {
-    hand.push(lowestElement + i)
-  }
-
-  return hand
 }
 
 module.exports = calculateScore
