@@ -26,25 +26,25 @@ const handWithStraight = [
     rank: '10'
   },
   {
-    rank: 'jack'
+    rank: 'J'
   },
   {
-    rank: 'queen'
+    rank: 'Q'
   },
   {
-    rank: 'king'
+    rank: 'K'
   }
 ]
 
 const handWithoutPairAndStraight = [
   {
-    rank: 'ace'
+    rank: 'A'
   },
   {
     rank: '3'
   },
   {
-    rank: 'jack'
+    rank: 'J'
   },
   {
     rank: '5'
@@ -55,17 +55,17 @@ const handWithoutPairAndStraight = [
 ]
 
 test('returns true for matching rank', () => {
-  expect(calculateScore(handWithPair)).toBe(100)
+  expect(calculateScore(handWithPair)).toEqual(100)
 })
 
 test('returns false for hand without matching rank', () => {
-  expect(calculateScore(handWithoutPairAndStraight)).toBe(0)
+  expect(calculateScore(handWithoutPairAndStraight)).toEqual(0)
 })
 
 test('returns true for straight', () => {
-  expect(calculateScore(handWithStraight)).toBe(500)
+  expect(calculateScore(handWithStraight)).toEqual(500)
 })
 
 test('returns false for hand without pair', () => {
-  expect(calculateScore(handWithoutPairAndStraight)).toBe(0)
+  expect(calculateScore(handWithoutPairAndStraight)).toEqual(0)
 })

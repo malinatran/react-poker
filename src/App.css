@@ -17,8 +17,12 @@ body {
 .Subtitle {
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 16px;
   margin: 0;
+}
+
+.Attribute {
+  padding: 0 10px;
 }
 
 .ButtonContainer {
@@ -52,22 +56,37 @@ body {
   background-color: #cc0444;
 }
 
-#GoButton:hover {
+#GoButton:hover:enabled {
   color: white;
   background-color: #641363;
+}
+
+#GoButton:disabled {
+  background-color: lightgrey;
+  border-color: grey;
+  color: grey;
+  opacity: 0.5;
+}
+
+.CardContainer {
+  display: flex;
+  justify-content: space-between;
 }
 
 .CardDetail {
   border: 2px solid black;
   border-radius: 5px;
   height: 200px;
+  display: inline-block;
+  padding: 10px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
 .RankAndSuitText {
-  margin: 0;
+  margin-top: 5px;
 }
 
 .UpsideDown {
@@ -78,6 +97,29 @@ body {
   margin-top: 40px;
 }
 
-.iSelected {
-  background-color: pink;
+.CardButton {
+  opacity: 0.5;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.CardButton > p {
+  margin-bottom: 0;
+}
+
+.CardButton:hover,
+.SelectedButton {
+  background-color: lavender;
+  opacity: 1;
+}
+
+.glyphicon-ok {
+  color: green;
+}
+
+.glyphicon-remove {
+  color: red;
+}
+
+@media (min-width: 768px) {
 }

@@ -4,12 +4,19 @@ import { Hand } from './components/Hand'
 import { Scoreboard } from './components/Scoreboard'
 import { Buttons } from './components/Buttons'
 import './App.css'
-const generateDeck = require('./helpers/deck')
+const {
+  generateDeck,
+  addToDeck,
+  countBools,
+  removeCard
+} = require('./helpers/deck')
 const calculateScore = require('./helpers/scoring')
 
 class App extends Component {
   state = {
-    hasDealt: false
+    hasDealt: false,
+    handValues: [],
+    isDisabled: true
   }
 
   render() {
@@ -21,10 +28,18 @@ class App extends Component {
             hasDealt={this.state.hasDealt}
             startGame={this.startGame}
             endGame={this.endGame}
+            isDisabled={this.state.isDisabled}
           />
           {this.state.hasDealt ? (
             <React.Fragment>
-              <Hand cards={this.state.cards} onDiscard={this.selectCard} />
+              <p className="text-uppercase">
+                Select 'keep' for each card to click 'go' and score
+              </p>
+              <Hand
+                cards={this.state.cards}
+                onDiscard={this.selectCard}
+                enableGoButton={this.enableGoButton}
+              />
               {this.state.score === -1 ? (
                 ''
               ) : (
@@ -39,6 +54,15 @@ class App extends Component {
     )
   }
 
+  enableGoButton = (id, isSelected) => {
+    this.setState(state => {
+      return {
+        handValues: addToDeck(state.handValues, { id, isSelected }),
+        isDisabled: !countBools(state.handValues)
+      }
+    })
+  }
+
   startGame = () => {
     const deck = generateDeck()
     const cards = deck.splice(0, 5)
@@ -47,20 +71,25 @@ class App extends Component {
       hasDealt: true,
       deck,
       cards,
-      score: -1
+      score: -1,
+      handValues: [],
+      isDisabled: true
     })
   }
 
   selectCard = card => {
     this.setState(state => {
-      const [newCard, ...deck] = state.deck
+      const [newCard, ...deck] =
+        state.deck.length > 1 ? state.deck : [card, state.deck]
 
       return {
         hasDealt: state.hasDealt,
         deck,
         cards: state.cards.map(c => {
           return c === card ? newCard : c
-        })
+        }),
+        handValues: removeCard(state.handValues, card.id),
+        isDisabled: !countBools(state.handValues)
       }
     })
   }

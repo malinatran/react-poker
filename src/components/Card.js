@@ -1,18 +1,57 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-export const Card = ({ card, onDiscard }) => (
-  <div className="col-sm-1 col-sm-offset-1 CardDetail">
-    <p className="text-left RankAndSuitText">
-      {card.rank} {card.suit}
-    </p>
-    <h4 className="isSelected">Keep</h4>
-    <h4 onClick={() => onDiscard(card)}>Discard</h4>
-    <p className="text-left RankAndSuitText UpsideDown">
-      {card.rank} {card.suit}
-    </p>
-  </div>
-)
+export class Card extends Component {
+  state = {
+    isSelected: false
+  }
+
+  render() {
+    return (
+      <div className="CardDetail">
+        <p className="text-left RankAndSuitText">
+          {this.props.card.rank} {this.props.card.suit}
+        </p>
+        <h4
+          className={
+            this.state.isSelected ? 'CardButton SelectedButton' : 'CardButton'
+          }
+          onClick={() => this.selectKeep(this.props.card.id)}
+        >
+          <i className="glyphicon glyphicon-ok" />
+          <p>Keep</p>
+        </h4>
+        <h4
+          className="CardButton"
+          onClick={() => this.unselectKeep(this.props.card)}
+        >
+          <i className="glyphicon glyphicon-remove" />
+          <p>Discard</p>
+        </h4>
+        <p className="text-left RankAndSuitText UpsideDown">
+          {this.props.card.rank} {this.props.card.suit}
+        </p>
+      </div>
+    )
+  }
+
+  selectKeep = cardId => {
+    this.setState({
+      isSelected: true
+    })
+
+    this.props.enableGoButton(cardId, true)
+  }
+
+  unselectKeep = card => {
+    this.setState({
+      isSelected: false
+    })
+
+    this.props.enableGoButton(card.id, false)
+    this.props.onDiscard(card)
+  }
+}
 
 Card.propTypes = {
   card: PropTypes.object.isRequired,
